@@ -1,6 +1,9 @@
 # Environment variables
 .env
 
+# Chat persistence
+chats.json
+
 # Virtual environment
 venv/
 

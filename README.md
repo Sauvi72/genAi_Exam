@@ -106,6 +106,18 @@ python take_screenshots.py
 
 ---
 
+## UI Features (ChatGPT Experience)
+
+1. **ChatGPT Dark & Light Theme**: Polished ChatGPT-inspired UI with custom typography, rounded chat bubbles, user messages on the right, bot messages on the left, and a one-click dark/light theme toggle in the top right corner.
+2. **Persistent Multi-Chat History**: All chat sessions survive browser refreshes and restarts via `chats.json`. New chats can be created (`+ New chat`), renamed, or deleted at any time.
+3. **Stop / Terminate Generation**: A dedicated "Stop" button appears while generating, allowing immediate cancellation of queries without locking the interface.
+4. **Regenerate & Feedback Actions**: Every bot reply includes quick actions: Copy to clipboard, Regenerate (re-queries preceding question), and Thumbs Up / Down feedback.
+5. **Markdown Export**: Export the entire active conversation as a clean Markdown file with a single click.
+6. **Dynamic LLM Provider Switching**: Switch between Google Gemini and Groq on the fly from the Settings expander without modifying source code.
+7. **Verified Citations & Snippets**: Found answers include a green status badge, verified page reference (e.g. `Page 2`), and an expandable supporting snippet with OCR/InDesign noise automatically stripped.
+
+---
+
 ## Screenshots
 
 ### Ingestion Output
@@ -113,7 +125,7 @@ python take_screenshots.py
 ![Ingestion Terminal](screenshots/ingestion.png)
 
 ### Web UI Overview
-*The empty Streamlit home screen with gradient header, status sidebar, and example exam question buttons.*
+*The empty ChatGPT-style home screen with dark sidebar, suggestion cards for the 5 exam questions, and top-right theme toggle.*
 ![UI Overview](screenshots/ui_overview.png)
 
 ### Question 1: Price Update Date
