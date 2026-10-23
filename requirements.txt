@@ -10,3 +10,4 @@ pypdf
 python-dotenv
 streamlit
 playwright
+langchain-groq
