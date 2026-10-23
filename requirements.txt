@@ -9,5 +9,4 @@ sentence-transformers
 pypdf
 python-dotenv
 streamlit
-playwright
 langchain-groq

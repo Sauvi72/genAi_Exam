@@ -8,21 +8,21 @@ A production-grade Retrieval-Augmented Generation (RAG) system built with **Pyth
 
 ```mermaid
 flowchart TD
-    A[History_2024-25.pdf] --> B[PyPDFLoader<br/>1-based page numbers]
-    B --> C[RecursiveCharacterTextSplitter<br/>chunk_size=800, overlap=150]
-    C --> D[HuggingFace Embeddings<br/>sentence-transformers/all-MiniLM-L6-v2]
-    D --> E[(ChromaDB Vectorstore<br/>collection: history_catalogue)]
+    A["History_2024-25.pdf"] --> B["PyPDFLoader<br/>1-based page numbers"]
+    B --> C["RecursiveCharacterTextSplitter<br/>chunk_size=800, overlap=150"]
+    C --> D["HuggingFace Embeddings<br/>sentence-transformers/all-MiniLM-L6-v2"]
+    D --> E[("ChromaDB Vectorstore<br/>collection: history_catalogue")]
     
-    Q[User Question] --> F[Retriever<br/>similarity_search_with_relevance_scores]
+    Q["User Question"] --> F["Retriever<br/>similarity_search_with_relevance_scores"]
     E --> F
-    F --> G{Relevance Score >= 0.25?}
-    G -- No --> H["Return 'Not found' (N/A)"]
-    G -- Yes --> I[Deduplicate Repeating Footers & Format [0],[1]...]
-    I --> J[Gemini LLM<br/>Structured JSON Prompt]
-    J --> K{Parse JSON: answer & source_ids}
-    K -- Not Found / Empty --> L["Return 'Not found' (N/A)"]
-    K -- Found --> M["Extract Pages from source_ids<br/>Sorted, deduplicated, max 3 pages"]
-    M --> N[Streamlit UI / CLI Output]
+    F --> G{"Relevance Score >= 0.25?"}
+    G -- "No" --> H["Return Not found (N/A)"]
+    G -- "Yes" --> I["Deduplicate Repeating Footers & Format Chunks"]
+    I --> J["Gemini LLM<br/>Structured JSON Prompt"]
+    J --> K{"Parse JSON: answer & source_ids"}
+    K -- "Not Found / Empty" --> L["Return Not found (N/A)"]
+    K -- "Found" --> M["Extract Pages from source_ids<br/>Sorted, deduplicated, max 3 pages"]
+    M --> N["Streamlit UI / CLI Output"]
 ```
 
 ---
@@ -30,12 +30,11 @@ flowchart TD
 ## Tech Stack
 
 - **Language**: Python 3.10+ (Tested on Python 3.12)
-- **Framework**: LangChain (`langchain`, `langchain-community`, `langchain-chroma`, `langchain-text-splitters`, `langchain-huggingface`, `langchain-google-genai`)
+- **Framework**: LangChain (`langchain`, `langchain-community`, `langchain-chroma`, `langchain-text-splitters`, `langchain-huggingface`, `langchain-google-genai`, `langchain-groq`)
 - **Vector Database**: ChromaDB (persisted locally at `./chroma_db`)
-- **Embedding Model**: HuggingFace `sentence-transformers/all-MiniLM-L6-v2` (Local, fast, no API quota consumed)
-- **Large Language Model (LLM)**: Google Gemini (`gemini-3.5-flash-lite` via `langchain-google-genai`) with swappable abstraction via `get_llm()` supporting Groq and Ollama.
-- **Web UI**: Streamlit (`streamlit`) with polished custom CSS, badges, and snippet expanders.
-- **Browser Automation & Testing**: Playwright (`playwright` with Chromium)
+- **Embedding Model**: HuggingFace `sentence-transformers/all-MiniLM-L6-v2` (Local, fast, no external API quota consumed)
+- **Large Language Model (LLM)**: Google Gemini (`gemini-3.5-flash-lite`) and Groq (`openai/gpt-oss-120b`) via modular `get_llm()`
+- **Web UI**: Streamlit (`streamlit`) with ChatGPT-style theme, dark/light toggle, and session persistence
 - **PDF Parser**: `pypdf` (`PyPDFLoader`)
 - **Environment Management**: `python-dotenv`
 
@@ -49,7 +48,6 @@ python3 -m venv venv
 source venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
-python -m playwright install chromium
 ```
 
 ### 2. Configure API Keys
@@ -57,10 +55,18 @@ Copy `.env.example` to `.env`:
 ```bash
 cp .env.example .env
 ```
-Edit `.env` and paste your Gemini API key (free from [aistudio.google.com](https://aistudio.google.com/)):
+Edit `.env` and configure your API key:
 ```env
-GOOGLE_API_KEY=your_actual_key_here
+GOOGLE_API_KEY=your_gemini_key_here
 GEMINI_MODEL=gemini-3.5-flash-lite
+
+# Optional: Groq
+GROQ_API_KEY=your_groq_key_here
+GROQ_MODEL=openai/gpt-oss-120b
+
+# Document path
+PDF_PATH=History_2024-25.pdf
+CHROMA_DIR=chroma_db
 ```
 
 ### 3. Ingest and Index the PDF
@@ -69,30 +75,18 @@ Parse `History_2024-25.pdf`, split into 800-character chunks with 150 overlap, c
 python ingest.py
 ```
 
-### 4. Run the 5 Benchmark Questions
-Execute the benchmark evaluation across the 5 exam questions and update `answers.md`:
-```bash
-python run_questions.py
-```
-
-### 5. Launch the Streamlit Web Application
-Start the interactive Streamlit chat interface:
+### 4. Launch the Streamlit Web Application
+Start the interactive ChatGPT-style web UI:
 ```bash
 streamlit run ui.py --server.port 8501 --server.headless true
 ```
 Open your browser at `http://localhost:8501`.
 
-### 6. Automated Screenshot Generation
-Run the automated Playwright script to capture screenshots of each question, the UI overview, and the terminal ingestion:
-```bash
-python take_screenshots.py
-```
+*(Alternatively, use the interactive terminal CLI by running `python app.py`)*
 
 ---
 
-## Answers to the 5 Questions
-
-*(Generated dynamically via `python run_questions.py` and saved in `answers.md`)*
+## Answers to the 5 Exam Questions
 
 | # | Question | Answer | Reference |
 |---|----------|--------|-----------|
