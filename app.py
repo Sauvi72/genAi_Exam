@@ -9,10 +9,10 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-# Verify paths
+# Verify paths from environment variables
 BASE_DIR = Path(__file__).resolve().parent
-PDF_PATH = BASE_DIR / "History_2024-25.pdf"
-CHROMA_DIR = BASE_DIR / "chroma_db"
+PDF_PATH = BASE_DIR / os.getenv("PDF_PATH", "History_2024-25.pdf")
+CHROMA_DIR = BASE_DIR / os.getenv("CHROMA_DIR", "chroma_db")
 
 def verify_environment():
     """Verify prerequisites and return friendly error messages if missing."""

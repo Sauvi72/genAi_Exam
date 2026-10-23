@@ -6,11 +6,15 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_chroma import Chroma
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 def ingest_pdf():
-    # Resolve path relative to this script
+    # Resolve path relative to this script or environment variable
     script_dir = Path(__file__).resolve().parent
-    pdf_path = script_dir / "History_2024-25.pdf"
-    chroma_dir = script_dir / "chroma_db"
+    pdf_path = script_dir / os.getenv("PDF_PATH", "History_2024-25.pdf")
+    chroma_dir = script_dir / os.getenv("CHROMA_DIR", "chroma_db")
 
     if not pdf_path.exists():
         raise FileNotFoundError(f"PDF file not found at: {pdf_path}")

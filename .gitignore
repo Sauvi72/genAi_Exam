@@ -4,6 +4,9 @@
 # Chat persistence
 chats.json
 
+# Heavy documents
+*.pdf
+
 # Virtual environment
 venv/
 
