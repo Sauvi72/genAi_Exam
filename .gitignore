@@ -1,0 +1,21 @@
+# Environment variables
+.env
+
+# Virtual environment
+venv/
+
+# Vector database cache
+chroma_db/
+
+# Python bytecode and cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Do NOT ignore screenshots
+!screenshots/*.png
+!screenshots/.gitkeep
