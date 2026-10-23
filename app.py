@@ -58,9 +58,10 @@ def get_llm():
         if not groq_api_key:
             print("Error: Missing GROQ_API_KEY for Groq provider.")
             sys.exit(1)
+        model = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
         from langchain_groq import ChatGroq
         return ChatGroq(
-            model=os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile"),
+            model=model,
             groq_api_key=groq_api_key,
             temperature=0.0
         )
